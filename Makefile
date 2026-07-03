@@ -6,6 +6,7 @@ SRC_DIR := src
 BUILD_DIR := build
 
 SOURCES := $(SRC_DIR)/main.c \
+           $(SRC_DIR)/application.c \
            $(SRC_DIR)/menu.c
 OBJECTS := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
 
