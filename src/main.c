@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "application.h"
+#include "file.h"
 #include "menu.h"
 
 static void handleAddApplication(const ApplicationList *applications){
@@ -44,8 +45,15 @@ static void handleStatistics(const ApplicationList *applications){
 }
 
 static void handleSave(const ApplicationList *applications){
-    printf("Applications ready to save: %zu\n", getApplicationCount(applications));
-    puts("CSV saving is not implemented yet.");
+    FileResult result;
+
+    result = saveApplications(APPLICATIONS_CSV_PATH, applications);
+    if (result == FileResultOk){
+        printf("Saved %zu application(s).\n", getApplicationCount(applications));
+        return;
+    }
+
+    printf("Could not save applications: %s.\n", fileResultToString(result));
 }
 
 static void handleMenuOption(MenuOption option, const ApplicationList *applications){
@@ -81,12 +89,24 @@ static void handleMenuOption(MenuOption option, const ApplicationList *applicati
 
 int main(void){
     ApplicationList applications;
+    FileResult loadResult;
+    FileResult saveResult;
     MenuOption option;
 
     initApplicationList(&applications);
 
     puts("JobTrackerCLI");
     puts("-------------");
+
+    loadResult = loadApplications(APPLICATIONS_CSV_PATH, &applications);
+    if (loadResult == FileResultOk){
+        printf("Loaded %zu application(s).\n", getApplicationCount(&applications));
+    }else if (loadResult == FileResultNotFound){
+        puts("No saved applications found. Starting with an empty list.");
+    }else{
+        printf("Could not load applications: %s. Starting with an empty list.\n",
+               fileResultToString(loadResult));
+    }
 
     do{
         printMenu();
@@ -96,6 +116,11 @@ int main(void){
             handleMenuOption(option, &applications);
         }
     } while (option != MenuExit);
+
+    saveResult = saveApplications(APPLICATIONS_CSV_PATH, &applications);
+    if (saveResult != FileResultOk){
+        printf("Could not save applications on exit: %s.\n", fileResultToString(saveResult));
+    }
 
     freeApplicationList(&applications);
 

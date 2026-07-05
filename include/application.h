@@ -41,8 +41,10 @@ typedef struct {
 void initApplicationList(ApplicationList *applications);
 void freeApplicationList(ApplicationList *applications);
 size_t getApplicationCount(const ApplicationList *applications);
+int addApplicationToList(ApplicationList *applications, const Application *application);
 int isValidStatus(ApplicationStatus status);
 const char *statusToString(ApplicationStatus status);
+ApplicationStatus statusFromString(const char *statusText);
 void printStatusOptions(void);
 
 #endif

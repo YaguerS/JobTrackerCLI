@@ -2,6 +2,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#define INITIAL_CAPACITY 8
 
 void initApplicationList(ApplicationList *applications){
     if (applications == NULL){
@@ -30,6 +33,40 @@ size_t getApplicationCount(const ApplicationList *applications){
     }
 
     return applications->count;
+}
+
+int addApplicationToList(ApplicationList *applications, const Application *application){
+    Application *items;
+    size_t newCapacity;
+
+    if (applications == NULL || application == NULL){
+        return 0;
+    }
+
+    if (applications->count == applications->capacity){
+        if (applications->capacity == 0){
+            newCapacity = INITIAL_CAPACITY;
+        }else{
+            if (applications->capacity > ((size_t)-1) / 2){
+                return 0;
+            }
+
+            newCapacity = applications->capacity * 2;
+        }
+
+        items = realloc(applications->items, newCapacity * sizeof(applications->items[0]));
+        if (items == NULL){
+            return 0;
+        }
+
+        applications->items = items;
+        applications->capacity = newCapacity;
+    }
+
+    applications->items[applications->count] = *application;
+    applications->count++;
+
+    return 1;
 }
 
 int isValidStatus(ApplicationStatus status){
@@ -65,6 +102,22 @@ const char *statusToString(ApplicationStatus status){
     default:
         return "Unknown";
     }
+}
+
+ApplicationStatus statusFromString(const char *statusText){
+    ApplicationStatus status;
+
+    if (statusText == NULL){
+        return 0;
+    }
+
+    for (status = StatusLead; status <= StatusAccepted; status++){
+        if (strcmp(statusText, statusToString(status)) == 0){
+            return status;
+        }
+    }
+
+    return 0;
 }
 
 void printStatusOptions(void){
