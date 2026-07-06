@@ -8,11 +8,11 @@
 
 #define MENU_INPUT_SIZE 64
 
-static int parseMenuChoice(const char *input, int *choice){
+static int parseInt(const char *input, int *value){
     char *end = NULL;
     long parsed;
 
-    if (input == NULL || choice == NULL){
+    if (input == NULL || value == NULL){
         return 0;
     }
 
@@ -30,8 +30,26 @@ static int parseMenuChoice(const char *input, int *choice){
         end++;
     }
 
-    *choice = (int)parsed;
+    *value = (int)parsed;
     return 1;
+}
+
+static void clearInputLine(void){
+    int ch;
+
+    while ((ch = getchar()) != '\n' && ch != EOF){
+    }
+}
+
+static int inputLineIsComplete(void){
+    int ch = getchar();
+
+    if (ch == '\n' || ch == EOF){
+        return 1;
+    }
+
+    clearInputLine();
+    return 0;
 }
 
 void printMenu(void){
@@ -59,17 +77,71 @@ MenuOption readMenuOption(void){
         }
 
         if (strchr(input, '\n') == NULL){
-            int ch;
-
-            while ((ch = getchar()) != '\n' && ch != EOF){
-            }
+            clearInputLine();
         }
 
-        if (parseMenuChoice(input, &choice) && choice >= MenuAddApplication &&
+        if (parseInt(input, &choice) && choice >= MenuAddApplication &&
             choice <= MenuExit){
             return (MenuOption)choice;
         }
 
         puts("Invalid option. Please enter a number from 1 to 7.");
+    }
+}
+
+int readText(const char *prompt, char *buffer, size_t size, int required){
+    size_t length;
+
+    if (prompt == NULL || buffer == NULL || size == 0){
+        return 0;
+    }
+
+    for (;;){
+        fputs(prompt, stdout);
+
+        if (fgets(buffer, size, stdin) == NULL){
+            putchar('\n');
+            return 0;
+        }
+
+        if (strchr(buffer, '\n') == NULL && !inputLineIsComplete()){
+            printf("Input is too long. Maximum length is %zu character(s).\n", size - 1);
+            continue;
+        }
+
+        length = strlen(buffer);
+        if (length > 0 && buffer[length - 1] == '\n'){
+            buffer[length - 1] = '\0';
+            length--;
+        }
+
+        if (required && length == 0){
+            puts("This field is required.");
+            continue;
+        }
+
+        return 1;
+    }
+}
+
+int readIntInRange(const char *prompt, int min, int max, int *value){
+    char input[MENU_INPUT_SIZE];
+    int parsed;
+
+    if (prompt == NULL || value == NULL || min > max){
+        return 0;
+    }
+
+    for (;;){
+        if (!readText(prompt, input, sizeof(input), 1)){
+            return 0;
+        }
+
+        if (parseInt(input, &parsed) && parsed >= min && parsed <= max){
+            *value = parsed;
+            return 1;
+        }
+
+        printf("Invalid option. Please enter a number from %d to %d.\n", min, max);
     }
 }
