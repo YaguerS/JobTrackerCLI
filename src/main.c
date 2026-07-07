@@ -59,6 +59,31 @@ static int readDate(const char *prompt, char *buffer, size_t size, int required)
     }
 }
 
+static const char *displayText(const char *text){
+    if (text == NULL || text[0] == '\0'){
+        return "-";
+    }
+
+    return text;
+}
+
+static void printApplication(const Application *application, size_t number){
+    if (application == NULL){
+        return;
+    }
+
+    printf("\nApplication %zu\n", number);
+    puts("----------------");
+    printf("Company:        %s\n", displayText(application->company));
+    printf("Position:       %s\n", displayText(application->position));
+    printf("Location:       %s\n", displayText(application->location));
+    printf("Source:         %s\n", displayText(application->source));
+    printf("Date applied:   %s\n", displayText(application->dateApplied));
+    printf("Status:         %s\n", statusToString(application->status));
+    printf("Follow-up date: %s\n", displayText(application->followUpDate));
+    printf("Notes:          %s\n", displayText(application->notes));
+}
+
 static void handleAddApplication(ApplicationList *applications){
     Application application;
     int statusChoice;
@@ -102,12 +127,18 @@ static void handleAddApplication(ApplicationList *applications){
 }
 
 static void handleViewApplications(const ApplicationList *applications){
+    size_t i;
+
     if (getApplicationCount(applications) == 0){
         puts("No applications loaded yet.");
         return;
     }
 
-    puts("View applications is not implemented yet.");
+    printf("\nApplications (%zu)\n", getApplicationCount(applications));
+
+    for (i = 0; i < applications->count; i++){
+        printApplication(&applications->items[i], i + 1);
+    }
 }
 
 static void handleUpdateStatus(const ApplicationList *applications){
