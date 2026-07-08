@@ -67,6 +67,45 @@ static const char *displayText(const char *text){
     return text;
 }
 
+static int charsEqualIgnoreCase(char left, char right){
+    unsigned char leftChar = (unsigned char)left;
+    unsigned char rightChar = (unsigned char)right;
+
+    return tolower(leftChar) == tolower(rightChar);
+}
+
+static int startsWithIgnoreCase(const char *text, const char *query){
+    size_t i;
+
+    if (text == NULL || query == NULL){
+        return 0;
+    }
+
+    for (i = 0; query[i] != '\0'; i++){
+        if (text[i] == '\0' || !charsEqualIgnoreCase(text[i], query[i])){
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+static int containsIgnoreCase(const char *text, const char *query){
+    size_t i;
+
+    if (text == NULL || query == NULL || query[0] == '\0'){
+        return 0;
+    }
+
+    for (i = 0; text[i] != '\0'; i++){
+        if (startsWithIgnoreCase(&text[i], query)){
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 static void printApplication(const Application *application, size_t number){
     if (application == NULL){
         return;
@@ -153,12 +192,37 @@ static void handleUpdateStatus(const ApplicationList *applications){
 }
 
 static void handleSearchByCompany(const ApplicationList *applications){
+    char query[COMPANY_SIZE];
+    size_t i;
+    size_t matches = 0;
+
     if (getApplicationCount(applications) == 0){
         puts("No applications available to search.");
         return;
     }
 
-    puts("Search by company is not implemented yet.");
+    if (!readText("Company search: ", query, sizeof(query), 1)){
+        puts("Search cancelled.");
+        return;
+    }
+
+    for (i = 0; i < applications->count; i++){
+        if (containsIgnoreCase(applications->items[i].company, query)){
+            if (matches == 0){
+                printf("\nSearch results for \"%s\"\n", query);
+            }
+
+            printApplication(&applications->items[i], i + 1);
+            matches++;
+        }
+    }
+
+    if (matches == 0){
+        printf("No applications found for \"%s\".\n", query);
+        return;
+    }
+
+    printf("\nFound %zu matching application(s).\n", matches);
 }
 
 static void handleStatistics(const ApplicationList *applications){
