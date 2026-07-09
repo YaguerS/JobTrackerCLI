@@ -4,7 +4,7 @@ JobTrackerCLI is a C17 command-line application for tracking job applications du
 
 ## Status
 
-Milestones 1, 2, 3, 4, 5, and 6 are implemented:
+Milestones 1, 2, 3, 4, 5, 6, and 7 are implemented:
 
 - Project structure
 - Public headers
@@ -18,6 +18,7 @@ Milestones 1, 2, 3, 4, 5, and 6 are implemented:
 - Add application workflow with input validation
 - View applications
 - Search by company
+- Statistics
 
 ## Build
 

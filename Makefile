@@ -8,7 +8,8 @@ BUILD_DIR := build
 SOURCES := $(SRC_DIR)/main.c \
            $(SRC_DIR)/application.c \
            $(SRC_DIR)/file.c \
-           $(SRC_DIR)/menu.c
+           $(SRC_DIR)/menu.c \
+           $(SRC_DIR)/stats.c
 OBJECTS := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
 
 .PHONY: all clean run

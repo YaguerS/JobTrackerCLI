@@ -5,6 +5,7 @@
 #include "application.h"
 #include "file.h"
 #include "menu.h"
+#include "stats.h"
 
 static int parseDatePart(const char *text, size_t start, size_t length){
     int value = 0;
@@ -226,8 +227,9 @@ static void handleSearchByCompany(const ApplicationList *applications){
 }
 
 static void handleStatistics(const ApplicationList *applications){
-    printf("Applications in memory: %zu\n", getApplicationCount(applications));
-    puts("Detailed statistics are not implemented yet.");
+    ApplicationStats stats = calculateStats(applications);
+
+    printStats(&stats);
 }
 
 static void handleSave(const ApplicationList *applications){
