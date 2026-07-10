@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/santi/DEBEL/C/JobTrackerCLI/build-cmake/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

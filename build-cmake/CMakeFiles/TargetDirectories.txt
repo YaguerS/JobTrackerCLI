@@ -1,0 +1,3 @@
+/home/santi/DEBEL/C/JobTrackerCLI/build-cmake/CMakeFiles/JobTrackerCLI.dir
+/home/santi/DEBEL/C/JobTrackerCLI/build-cmake/CMakeFiles/edit_cache.dir
+/home/santi/DEBEL/C/JobTrackerCLI/build-cmake/CMakeFiles/rebuild_cache.dir

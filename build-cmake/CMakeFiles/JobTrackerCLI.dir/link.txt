@@ -1,0 +1,1 @@
+/usr/bin/cc -Wl,--dependency-file=CMakeFiles/JobTrackerCLI.dir/link.d CMakeFiles/JobTrackerCLI.dir/src/main.c.o CMakeFiles/JobTrackerCLI.dir/src/application.c.o CMakeFiles/JobTrackerCLI.dir/src/file.c.o CMakeFiles/JobTrackerCLI.dir/src/menu.c.o CMakeFiles/JobTrackerCLI.dir/src/stats.c.o -o JobTrackerCLI

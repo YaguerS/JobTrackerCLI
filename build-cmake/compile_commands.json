@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/santi/DEBEL/C/JobTrackerCLI/build-cmake",
+  "command": "/usr/bin/cc  -I/home/santi/DEBEL/C/JobTrackerCLI/include -std=gnu17 -Wall -Wextra -Wpedantic -o CMakeFiles/JobTrackerCLI.dir/src/main.c.o -c /home/santi/DEBEL/C/JobTrackerCLI/src/main.c",
+  "file": "/home/santi/DEBEL/C/JobTrackerCLI/src/main.c",
+  "output": "CMakeFiles/JobTrackerCLI.dir/src/main.c.o"
+},
+{
+  "directory": "/home/santi/DEBEL/C/JobTrackerCLI/build-cmake",
+  "command": "/usr/bin/cc  -I/home/santi/DEBEL/C/JobTrackerCLI/include -std=gnu17 -Wall -Wextra -Wpedantic -o CMakeFiles/JobTrackerCLI.dir/src/application.c.o -c /home/santi/DEBEL/C/JobTrackerCLI/src/application.c",
+  "file": "/home/santi/DEBEL/C/JobTrackerCLI/src/application.c",
+  "output": "CMakeFiles/JobTrackerCLI.dir/src/application.c.o"
+},
+{
+  "directory": "/home/santi/DEBEL/C/JobTrackerCLI/build-cmake",
+  "command": "/usr/bin/cc  -I/home/santi/DEBEL/C/JobTrackerCLI/include -std=gnu17 -Wall -Wextra -Wpedantic -o CMakeFiles/JobTrackerCLI.dir/src/file.c.o -c /home/santi/DEBEL/C/JobTrackerCLI/src/file.c",
+  "file": "/home/santi/DEBEL/C/JobTrackerCLI/src/file.c",
+  "output": "CMakeFiles/JobTrackerCLI.dir/src/file.c.o"
+},
+{
+  "directory": "/home/santi/DEBEL/C/JobTrackerCLI/build-cmake",
+  "command": "/usr/bin/cc  -I/home/santi/DEBEL/C/JobTrackerCLI/include -std=gnu17 -Wall -Wextra -Wpedantic -o CMakeFiles/JobTrackerCLI.dir/src/menu.c.o -c /home/santi/DEBEL/C/JobTrackerCLI/src/menu.c",
+  "file": "/home/santi/DEBEL/C/JobTrackerCLI/src/menu.c",
+  "output": "CMakeFiles/JobTrackerCLI.dir/src/menu.c.o"
+},
+{
+  "directory": "/home/santi/DEBEL/C/JobTrackerCLI/build-cmake",
+  "command": "/usr/bin/cc  -I/home/santi/DEBEL/C/JobTrackerCLI/include -std=gnu17 -Wall -Wextra -Wpedantic -o CMakeFiles/JobTrackerCLI.dir/src/stats.c.o -c /home/santi/DEBEL/C/JobTrackerCLI/src/stats.c",
+  "file": "/home/santi/DEBEL/C/JobTrackerCLI/src/stats.c",
+  "output": "CMakeFiles/JobTrackerCLI.dir/src/stats.c.o"
+}
+]
