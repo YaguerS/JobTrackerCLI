@@ -46,3 +46,23 @@ make clean
 - Dependencies: standard C library only
 - Main warning target: `-Wall -Wextra -Wpedantic`
 - Runtime data is ignored by Git so personal job-search records are not committed accidentally.
+
+## Code Quality
+
+The project follows a consistent development workflow:
+
+- C17
+- GCC
+- Make
+- CMake (IDE tooling)
+- clangd
+- clang-format
+- clang-tidy
+
+All code is compiled with:
+
+```text
+-Wall -Wextra -Wpedantic
+```
+
+to maintain a warning-free build.

@@ -16,7 +16,7 @@ typedef struct {
     double offerRate;
 } ApplicationStats;
 
-ApplicationStats calculateStats(const ApplicationList *applications);
-void printStats(const ApplicationStats *stats);
+ApplicationStats calculateStats(const ApplicationList* applications);
+void printStats(const ApplicationStats* stats);
 
 #endif

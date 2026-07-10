@@ -33,18 +33,18 @@ typedef struct {
 } Application;
 
 typedef struct {
-    Application *items;
+    Application* items;
     size_t count;
     size_t capacity;
 } ApplicationList;
 
-void initApplicationList(ApplicationList *applications);
-void freeApplicationList(ApplicationList *applications);
-size_t getApplicationCount(const ApplicationList *applications);
-int addApplicationToList(ApplicationList *applications, const Application *application);
+void initApplicationList(ApplicationList* applications);
+void freeApplicationList(ApplicationList* applications);
+size_t getApplicationCount(const ApplicationList* applications);
+int addApplicationToList(ApplicationList* applications, const Application* application);
 int isValidStatus(ApplicationStatus status);
-const char *statusToString(ApplicationStatus status);
-ApplicationStatus statusFromString(const char *statusText);
+const char* statusToString(ApplicationStatus status);
+ApplicationStatus statusFromString(const char* statusText);
 void printStatusOptions(void);
 
 #endif

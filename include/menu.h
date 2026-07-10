@@ -15,7 +15,7 @@ typedef enum {
 
 void printMenu(void);
 MenuOption readMenuOption(void);
-int readText(const char *prompt, char *buffer, size_t size, int required);
-int readIntInRange(const char *prompt, int min, int max, int *value);
+int readText(const char* prompt, char* buffer, size_t size, int required);
+int readIntInRange(const char* prompt, int min, int max, int* value);
 
 #endif

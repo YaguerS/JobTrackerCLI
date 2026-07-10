@@ -7,8 +7,8 @@
 
 #define INITIAL_CAPACITY 8
 
-void initApplicationList(ApplicationList *applications){
-    if (applications == NULL){
+void initApplicationList(ApplicationList* applications) {
+    if (applications == NULL) {
         return;
     }
 
@@ -17,8 +17,8 @@ void initApplicationList(ApplicationList *applications){
     applications->capacity = 0;
 }
 
-void freeApplicationList(ApplicationList *applications){
-    if (applications == NULL){
+void freeApplicationList(ApplicationList* applications) {
+    if (applications == NULL) {
         return;
     }
 
@@ -28,39 +28,39 @@ void freeApplicationList(ApplicationList *applications){
     applications->capacity = 0;
 }
 
-size_t getApplicationCount(const ApplicationList *applications){
-    if (applications == NULL){
+size_t getApplicationCount(const ApplicationList* applications) {
+    if (applications == NULL) {
         return 0;
     }
 
     return applications->count;
 }
 
-int addApplicationToList(ApplicationList *applications, const Application *application){
-    Application *items;
+int addApplicationToList(ApplicationList* applications, const Application* application) {
+    Application* items;
     size_t newCapacity;
 
-    if (applications == NULL || application == NULL){
+    if (applications == NULL || application == NULL) {
         return 0;
     }
 
-    if (applications->count == applications->capacity){
-        if (applications->capacity == 0){
+    if (applications->count == applications->capacity) {
+        if (applications->capacity == 0) {
             newCapacity = INITIAL_CAPACITY;
-        }else{
-            if (applications->capacity > ((size_t)-1) / 2){
+        } else {
+            if (applications->capacity > ((size_t)-1) / 2) {
                 return 0;
             }
 
             newCapacity = applications->capacity * 2;
         }
 
-        if (newCapacity > SIZE_MAX / sizeof(applications->items[0])){
+        if (newCapacity > SIZE_MAX / sizeof(applications->items[0])) {
             return 0;
         }
 
         items = realloc(applications->items, newCapacity * sizeof(applications->items[0]));
-        if (items == NULL){
+        if (items == NULL) {
             return 0;
         }
 
@@ -74,12 +74,12 @@ int addApplicationToList(ApplicationList *applications, const Application *appli
     return 1;
 }
 
-int isValidStatus(ApplicationStatus status){
+int isValidStatus(ApplicationStatus status) {
     return status >= StatusLead && status <= StatusAccepted;
 }
 
-const char *statusToString(ApplicationStatus status){
-    switch (status){
+const char* statusToString(ApplicationStatus status) {
+    switch (status) {
     case StatusLead:
         return "Lead";
 
@@ -109,15 +109,15 @@ const char *statusToString(ApplicationStatus status){
     }
 }
 
-ApplicationStatus statusFromString(const char *statusText){
+ApplicationStatus statusFromString(const char* statusText) {
     ApplicationStatus status;
 
-    if (statusText == NULL){
+    if (statusText == NULL) {
         return 0;
     }
 
-    for (status = StatusLead; status <= StatusAccepted; status++){
-        if (strcmp(statusText, statusToString(status)) == 0){
+    for (status = StatusLead; status <= StatusAccepted; status++) {
+        if (strcmp(statusText, statusToString(status)) == 0) {
             return status;
         }
     }
@@ -125,10 +125,10 @@ ApplicationStatus statusFromString(const char *statusText){
     return 0;
 }
 
-void printStatusOptions(void){
+void printStatusOptions(void) {
     ApplicationStatus status;
 
-    for (status = StatusLead; status <= StatusAccepted; status++){
+    for (status = StatusLead; status <= StatusAccepted; status++) {
         printf("%d. %s\n", status, statusToString(status));
     }
 }

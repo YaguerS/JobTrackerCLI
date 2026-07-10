@@ -2,36 +2,36 @@
 
 #include <stdio.h>
 
-static int isPendingStatus(ApplicationStatus status){
+static int isPendingStatus(ApplicationStatus status) {
     return status != StatusRejected && status != StatusAccepted;
 }
 
-static double calculateRate(size_t count, size_t total){
-    if (total == 0){
+static double calculateRate(size_t count, size_t total) {
+    if (total == 0) {
         return 0.0;
     }
 
     return ((double)count / (double)total) * 100.0;
 }
 
-ApplicationStats calculateStats(const ApplicationList *applications){
+ApplicationStats calculateStats(const ApplicationList* applications) {
     ApplicationStats stats = {0};
     size_t i;
 
-    if (applications == NULL){
+    if (applications == NULL) {
         return stats;
     }
 
     stats.totalApplications = applications->count;
 
-    for (i = 0; i < applications->count; i++){
+    for (i = 0; i < applications->count; i++) {
         ApplicationStatus status = applications->items[i].status;
 
-        if (isPendingStatus(status)){
+        if (isPendingStatus(status)) {
             stats.pendingApplications++;
         }
 
-        switch (status){
+        switch (status) {
         case StatusInterview:
             stats.interviews++;
             break;
@@ -65,8 +65,8 @@ ApplicationStats calculateStats(const ApplicationList *applications){
     return stats;
 }
 
-void printStats(const ApplicationStats *stats){
-    if (stats == NULL){
+void printStats(const ApplicationStats* stats) {
+    if (stats == NULL) {
         return;
     }
 

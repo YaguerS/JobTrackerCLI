@@ -13,8 +13,8 @@ typedef enum {
     FileResultIoError
 } FileResult;
 
-FileResult loadApplications(const char *filePath, ApplicationList *applications);
-FileResult saveApplications(const char *filePath, const ApplicationList *applications);
-const char *fileResultToString(FileResult result);
+FileResult loadApplications(const char* filePath, ApplicationList* applications);
+FileResult saveApplications(const char* filePath, const ApplicationList* applications);
+const char* fileResultToString(FileResult result);
 
 #endif

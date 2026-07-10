@@ -8,14 +8,14 @@
 #include "menu.h"
 #include "stats.h"
 
-static int parseDatePart(const char *text, size_t start, size_t length){
+static int parseDatePart(const char* text, size_t start, size_t length) {
     int value = 0;
     size_t i;
 
-    for (i = 0; i < length; i++){
+    for (i = 0; i < length; i++) {
         unsigned char ch = (unsigned char)text[start + i];
 
-        if (!isdigit(ch)){
+        if (!isdigit(ch)) {
             return -1;
         }
 
@@ -25,19 +25,19 @@ static int parseDatePart(const char *text, size_t start, size_t length){
     return value;
 }
 
-static int isValidDate(const char *dateText, int required){
+static int isValidDate(const char* dateText, int required) {
     int month;
     int day;
 
-    if (dateText == NULL){
+    if (dateText == NULL) {
         return 0;
     }
 
-    if (!required && dateText[0] == '\0'){
+    if (!required && dateText[0] == '\0') {
         return 1;
     }
 
-    if (strlen(dateText) != 10 || dateText[4] != '-' || dateText[7] != '-'){
+    if (strlen(dateText) != 10 || dateText[4] != '-' || dateText[7] != '-') {
         return 0;
     }
 
@@ -47,13 +47,13 @@ static int isValidDate(const char *dateText, int required){
     return month >= 1 && month <= 12 && day >= 1 && day <= 31;
 }
 
-static int readDate(const char *prompt, char *buffer, size_t size, int required){
-    for (;;){
-        if (!readText(prompt, buffer, size, required)){
+static int readDate(const char* prompt, char* buffer, size_t size, int required) {
+    for (;;) {
+        if (!readText(prompt, buffer, size, required)) {
             return 0;
         }
 
-        if (isValidDate(buffer, required)){
+        if (isValidDate(buffer, required)) {
             return 1;
         }
 
@@ -61,30 +61,30 @@ static int readDate(const char *prompt, char *buffer, size_t size, int required)
     }
 }
 
-static const char *displayText(const char *text){
-    if (text == NULL || text[0] == '\0'){
+static const char* displayText(const char* text) {
+    if (text == NULL || text[0] == '\0') {
         return "-";
     }
 
     return text;
 }
 
-static int charsEqualIgnoreCase(char left, char right){
+static int charsEqualIgnoreCase(char left, char right) {
     unsigned char leftChar = (unsigned char)left;
     unsigned char rightChar = (unsigned char)right;
 
     return tolower(leftChar) == tolower(rightChar);
 }
 
-static int startsWithIgnoreCase(const char *text, const char *query){
+static int startsWithIgnoreCase(const char* text, const char* query) {
     size_t i;
 
-    if (text == NULL || query == NULL){
+    if (text == NULL || query == NULL) {
         return 0;
     }
 
-    for (i = 0; query[i] != '\0'; i++){
-        if (text[i] == '\0' || !charsEqualIgnoreCase(text[i], query[i])){
+    for (i = 0; query[i] != '\0'; i++) {
+        if (text[i] == '\0' || !charsEqualIgnoreCase(text[i], query[i])) {
             return 0;
         }
     }
@@ -92,15 +92,15 @@ static int startsWithIgnoreCase(const char *text, const char *query){
     return 1;
 }
 
-static int containsIgnoreCase(const char *text, const char *query){
+static int containsIgnoreCase(const char* text, const char* query) {
     size_t i;
 
-    if (text == NULL || query == NULL || query[0] == '\0'){
+    if (text == NULL || query == NULL || query[0] == '\0') {
         return 0;
     }
 
-    for (i = 0; text[i] != '\0'; i++){
-        if (startsWithIgnoreCase(&text[i], query)){
+    for (i = 0; text[i] != '\0'; i++) {
+        if (startsWithIgnoreCase(&text[i], query)) {
             return 1;
         }
     }
@@ -108,8 +108,8 @@ static int containsIgnoreCase(const char *text, const char *query){
     return 0;
 }
 
-static void printApplication(const Application *application, size_t number){
-    if (application == NULL){
+static void printApplication(const Application* application, size_t number) {
+    if (application == NULL) {
         return;
     }
 
@@ -125,7 +125,7 @@ static void printApplication(const Application *application, size_t number){
     printf("Notes:          %s\n", displayText(application->notes));
 }
 
-static void handleAddApplication(ApplicationList *applications){
+static void handleAddApplication(ApplicationList* applications) {
     Application application;
     int statusChoice;
 
@@ -138,14 +138,14 @@ static void handleAddApplication(ApplicationList *applications){
         !readText("Location: ", application.location, sizeof(application.location), 0) ||
         !readText("Source: ", application.source, sizeof(application.source), 0) ||
         !readDate("Date applied (YYYY-MM-DD): ", application.dateApplied,
-                  sizeof(application.dateApplied), 1)){
+                  sizeof(application.dateApplied), 1)) {
         puts("Add application cancelled.");
         return;
     }
 
     puts("Status:");
     printStatusOptions();
-    if (!readIntInRange("Choose status (1-8): ", StatusLead, StatusAccepted, &statusChoice)){
+    if (!readIntInRange("Choose status (1-8): ", StatusLead, StatusAccepted, &statusChoice)) {
         puts("Add application cancelled.");
         return;
     }
@@ -154,12 +154,12 @@ static void handleAddApplication(ApplicationList *applications){
 
     if (!readDate("Follow-up date (YYYY-MM-DD, optional): ", application.followUpDate,
                   sizeof(application.followUpDate), 0) ||
-        !readText("Notes: ", application.notes, sizeof(application.notes), 0)){
+        !readText("Notes: ", application.notes, sizeof(application.notes), 0)) {
         puts("Add application cancelled.");
         return;
     }
 
-    if (!addApplicationToList(applications, &application)){
+    if (!addApplicationToList(applications, &application)) {
         puts("Could not add application. Memory allocation failed.");
         return;
     }
@@ -167,32 +167,32 @@ static void handleAddApplication(ApplicationList *applications){
     printf("Added application for %s.\n", application.company);
 }
 
-static void handleViewApplications(const ApplicationList *applications){
+static void handleViewApplications(const ApplicationList* applications) {
     size_t i;
 
-    if (getApplicationCount(applications) == 0){
+    if (getApplicationCount(applications) == 0) {
         puts("No applications loaded yet.");
         return;
     }
 
     printf("\nApplications (%zu)\n", getApplicationCount(applications));
 
-    for (i = 0; i < applications->count; i++){
+    for (i = 0; i < applications->count; i++) {
         printApplication(&applications->items[i], i + 1);
     }
 }
 
-static void handleUpdateStatus(ApplicationList *applications){
+static void handleUpdateStatus(ApplicationList* applications) {
     int applicationChoice;
     int statusChoice;
-    Application *application;
+    Application* application;
 
-    if (getApplicationCount(applications) == 0){
+    if (getApplicationCount(applications) == 0) {
         puts("No applications available to update.");
         return;
     }
 
-    if (applications->count > INT_MAX){
+    if (applications->count > INT_MAX) {
         puts("Too many applications to update safely from this menu.");
         return;
     }
@@ -200,7 +200,7 @@ static void handleUpdateStatus(ApplicationList *applications){
     handleViewApplications(applications);
 
     if (!readIntInRange("Choose application number: ", 1, (int)applications->count,
-                        &applicationChoice)){
+                        &applicationChoice)) {
         puts("Update cancelled.");
         return;
     }
@@ -212,8 +212,7 @@ static void handleUpdateStatus(ApplicationList *applications){
     puts("\nAvailable statuses:");
     printStatusOptions();
 
-    if (!readIntInRange("Choose new status (1-8): ", StatusLead, StatusAccepted,
-                        &statusChoice)){
+    if (!readIntInRange("Choose new status (1-8): ", StatusLead, StatusAccepted, &statusChoice)) {
         puts("Update cancelled.");
         return;
     }
@@ -222,24 +221,24 @@ static void handleUpdateStatus(ApplicationList *applications){
     printf("Updated %s to %s.\n", application->company, statusToString(application->status));
 }
 
-static void handleSearchByCompany(const ApplicationList *applications){
+static void handleSearchByCompany(const ApplicationList* applications) {
     char query[COMPANY_SIZE];
     size_t i;
     size_t matches = 0;
 
-    if (getApplicationCount(applications) == 0){
+    if (getApplicationCount(applications) == 0) {
         puts("No applications available to search.");
         return;
     }
 
-    if (!readText("Company search: ", query, sizeof(query), 1)){
+    if (!readText("Company search: ", query, sizeof(query), 1)) {
         puts("Search cancelled.");
         return;
     }
 
-    for (i = 0; i < applications->count; i++){
-        if (containsIgnoreCase(applications->items[i].company, query)){
-            if (matches == 0){
+    for (i = 0; i < applications->count; i++) {
+        if (containsIgnoreCase(applications->items[i].company, query)) {
+            if (matches == 0) {
                 printf("\nSearch results for \"%s\"\n", query);
             }
 
@@ -248,7 +247,7 @@ static void handleSearchByCompany(const ApplicationList *applications){
         }
     }
 
-    if (matches == 0){
+    if (matches == 0) {
         printf("No applications found for \"%s\".\n", query);
         return;
     }
@@ -256,17 +255,17 @@ static void handleSearchByCompany(const ApplicationList *applications){
     printf("\nFound %zu matching application(s).\n", matches);
 }
 
-static void handleStatistics(const ApplicationList *applications){
+static void handleStatistics(const ApplicationList* applications) {
     ApplicationStats stats = calculateStats(applications);
 
     printStats(&stats);
 }
 
-static void handleSave(const ApplicationList *applications){
+static void handleSave(const ApplicationList* applications) {
     FileResult result;
 
     result = saveApplications(APPLICATIONS_CSV_PATH, applications);
-    if (result == FileResultOk){
+    if (result == FileResultOk) {
         printf("Saved %zu application(s).\n", getApplicationCount(applications));
         return;
     }
@@ -274,8 +273,8 @@ static void handleSave(const ApplicationList *applications){
     printf("Could not save applications: %s.\n", fileResultToString(result));
 }
 
-static void handleMenuOption(MenuOption option, ApplicationList *applications){
-    switch (option){
+static void handleMenuOption(MenuOption option, ApplicationList* applications) {
+    switch (option) {
     case MenuAddApplication:
         handleAddApplication(applications);
         break;
@@ -305,7 +304,7 @@ static void handleMenuOption(MenuOption option, ApplicationList *applications){
     }
 }
 
-int main(void){
+int main(void) {
     ApplicationList applications;
     FileResult loadResult;
     FileResult saveResult;
@@ -317,26 +316,26 @@ int main(void){
     puts("-------------");
 
     loadResult = loadApplications(APPLICATIONS_CSV_PATH, &applications);
-    if (loadResult == FileResultOk){
+    if (loadResult == FileResultOk) {
         printf("Loaded %zu application(s).\n", getApplicationCount(&applications));
-    }else if (loadResult == FileResultNotFound){
+    } else if (loadResult == FileResultNotFound) {
         puts("No saved applications found. Starting with an empty list.");
-    }else{
+    } else {
         printf("Could not load applications: %s. Starting with an empty list.\n",
                fileResultToString(loadResult));
     }
 
-    do{
+    do {
         printMenu();
         option = readMenuOption();
 
-        if (option != MenuExit){
+        if (option != MenuExit) {
             handleMenuOption(option, &applications);
         }
     } while (option != MenuExit);
 
     saveResult = saveApplications(APPLICATIONS_CSV_PATH, &applications);
-    if (saveResult != FileResultOk){
+    if (saveResult != FileResultOk) {
         printf("Could not save applications on exit: %s.\n", fileResultToString(saveResult));
     }
 

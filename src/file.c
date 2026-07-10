@@ -8,8 +8,8 @@
 #define CSV_FIELD_SIZE NOTES_SIZE
 #define CSV_LINE_SIZE 2048
 
-static int appendCsvChar(char *field, size_t *length, char ch){
-    if (*length >= CSV_FIELD_SIZE - 1){
+static int appendCsvChar(char* field, size_t* length, char ch) {
+    if (*length >= CSV_FIELD_SIZE - 1) {
         return 0;
     }
 
@@ -20,25 +20,26 @@ static int appendCsvChar(char *field, size_t *length, char ch){
     return 1;
 }
 
-static int parseCsvLine(const char *line, char fields[CSV_FIELD_COUNT][CSV_FIELD_SIZE], size_t *fieldCount){
+static int parseCsvLine(const char* line, char fields[CSV_FIELD_COUNT][CSV_FIELD_SIZE],
+                        size_t* fieldCount) {
     size_t fieldIndex = 0;
     size_t fieldLength = 0;
     size_t i = 0;
     int inQuotes = 0;
 
-    if (line == NULL || fields == NULL || fieldCount == NULL){
+    if (line == NULL || fields == NULL || fieldCount == NULL) {
         return 0;
     }
 
     fields[fieldIndex][0] = '\0';
 
-    while (line[i] != '\0'){
+    while (line[i] != '\0') {
         char ch = line[i];
 
-        if (inQuotes){
-            if (ch == '"'){
-                if (line[i + 1] == '"'){
-                    if (!appendCsvChar(fields[fieldIndex], &fieldLength, '"')){
+        if (inQuotes) {
+            if (ch == '"') {
+                if (line[i + 1] == '"') {
+                    if (!appendCsvChar(fields[fieldIndex], &fieldLength, '"')) {
                         return 0;
                     }
                     i += 2;
@@ -50,15 +51,15 @@ static int parseCsvLine(const char *line, char fields[CSV_FIELD_COUNT][CSV_FIELD
                 continue;
             }
 
-            if (!appendCsvChar(fields[fieldIndex], &fieldLength, ch)){
+            if (!appendCsvChar(fields[fieldIndex], &fieldLength, ch)) {
                 return 0;
             }
             i++;
             continue;
         }
 
-        if (ch == '"'){
-            if (fieldLength != 0){
+        if (ch == '"') {
+            if (fieldLength != 0) {
                 return 0;
             }
 
@@ -67,9 +68,9 @@ static int parseCsvLine(const char *line, char fields[CSV_FIELD_COUNT][CSV_FIELD
             continue;
         }
 
-        if (ch == ','){
+        if (ch == ',') {
             fieldIndex++;
-            if (fieldIndex >= CSV_FIELD_COUNT){
+            if (fieldIndex >= CSV_FIELD_COUNT) {
                 return 0;
             }
 
@@ -79,17 +80,17 @@ static int parseCsvLine(const char *line, char fields[CSV_FIELD_COUNT][CSV_FIELD
             continue;
         }
 
-        if (ch == '\n' || ch == '\r'){
+        if (ch == '\n' || ch == '\r') {
             break;
         }
 
-        if (!appendCsvChar(fields[fieldIndex], &fieldLength, ch)){
+        if (!appendCsvChar(fields[fieldIndex], &fieldLength, ch)) {
             return 0;
         }
         i++;
     }
 
-    if (inQuotes){
+    if (inQuotes) {
         return 0;
     }
 
@@ -97,8 +98,8 @@ static int parseCsvLine(const char *line, char fields[CSV_FIELD_COUNT][CSV_FIELD
     return 1;
 }
 
-static int copyField(char *destination, size_t destinationSize, const char *source){
-    if (destination == NULL || source == NULL || strlen(source) >= destinationSize){
+static int copyField(char* destination, size_t destinationSize, const char* source) {
+    if (destination == NULL || source == NULL || strlen(source) >= destinationSize) {
         return 0;
     }
 
@@ -106,26 +107,23 @@ static int copyField(char *destination, size_t destinationSize, const char *sour
     return 1;
 }
 
-static int fieldsAreHeader(char fields[CSV_FIELD_COUNT][CSV_FIELD_SIZE]){
-    return strcmp(fields[0], "Company") == 0 &&
-           strcmp(fields[1], "Position") == 0 &&
-           strcmp(fields[2], "Location") == 0 &&
-           strcmp(fields[3], "Source") == 0 &&
-           strcmp(fields[4], "Date Applied") == 0 &&
-           strcmp(fields[5], "Status") == 0 &&
-           strcmp(fields[6], "Follow-up Date") == 0 &&
-           strcmp(fields[7], "Notes") == 0;
+static int fieldsAreHeader(char fields[CSV_FIELD_COUNT][CSV_FIELD_SIZE]) {
+    return strcmp(fields[0], "Company") == 0 && strcmp(fields[1], "Position") == 0 &&
+           strcmp(fields[2], "Location") == 0 && strcmp(fields[3], "Source") == 0 &&
+           strcmp(fields[4], "Date Applied") == 0 && strcmp(fields[5], "Status") == 0 &&
+           strcmp(fields[6], "Follow-up Date") == 0 && strcmp(fields[7], "Notes") == 0;
 }
 
-static int applicationFromFields(char fields[CSV_FIELD_COUNT][CSV_FIELD_SIZE], Application *application){
+static int applicationFromFields(char fields[CSV_FIELD_COUNT][CSV_FIELD_SIZE],
+                                 Application* application) {
     ApplicationStatus status;
 
-    if (application == NULL){
+    if (application == NULL) {
         return 0;
     }
 
     status = statusFromString(fields[5]);
-    if (!isValidStatus(status)){
+    if (!isValidStatus(status)) {
         return 0;
     }
 
@@ -141,30 +139,30 @@ static int applicationFromFields(char fields[CSV_FIELD_COUNT][CSV_FIELD_SIZE], A
            (application->status = status, 1);
 }
 
-static int writeCsvField(FILE *file, const char *field){
+static int writeCsvField(FILE* file, const char* field) {
     int needsQuotes;
     size_t i;
 
-    if (file == NULL || field == NULL){
+    if (file == NULL || field == NULL) {
         return 0;
     }
 
     needsQuotes = strpbrk(field, ",\"\n\r") != NULL;
 
-    if (!needsQuotes){
+    if (!needsQuotes) {
         return fputs(field, file) >= 0;
     }
 
-    if (fputc('"', file) == EOF){
+    if (fputc('"', file) == EOF) {
         return 0;
     }
 
-    for (i = 0; field[i] != '\0'; i++){
-        if (field[i] == '"' && fputc('"', file) == EOF){
+    for (i = 0; field[i] != '\0'; i++) {
+        if (field[i] == '"' && fputc('"', file) == EOF) {
             return 0;
         }
 
-        if (fputc(field[i], file) == EOF){
+        if (fputc(field[i], file) == EOF) {
             return 0;
         }
     }
@@ -172,38 +170,30 @@ static int writeCsvField(FILE *file, const char *field){
     return fputc('"', file) != EOF;
 }
 
-static int writeApplication(FILE *file, const Application *application){
-    return writeCsvField(file, application->company) &&
-           fputc(',', file) != EOF &&
-           writeCsvField(file, application->position) &&
-           fputc(',', file) != EOF &&
-           writeCsvField(file, application->location) &&
-           fputc(',', file) != EOF &&
-           writeCsvField(file, application->source) &&
-           fputc(',', file) != EOF &&
-           writeCsvField(file, application->dateApplied) &&
-           fputc(',', file) != EOF &&
-           writeCsvField(file, statusToString(application->status)) &&
-           fputc(',', file) != EOF &&
-           writeCsvField(file, application->followUpDate) &&
-           fputc(',', file) != EOF &&
-           writeCsvField(file, application->notes) &&
-           fputc('\n', file) != EOF;
+static int writeApplication(FILE* file, const Application* application) {
+    return writeCsvField(file, application->company) && fputc(',', file) != EOF &&
+           writeCsvField(file, application->position) && fputc(',', file) != EOF &&
+           writeCsvField(file, application->location) && fputc(',', file) != EOF &&
+           writeCsvField(file, application->source) && fputc(',', file) != EOF &&
+           writeCsvField(file, application->dateApplied) && fputc(',', file) != EOF &&
+           writeCsvField(file, statusToString(application->status)) && fputc(',', file) != EOF &&
+           writeCsvField(file, application->followUpDate) && fputc(',', file) != EOF &&
+           writeCsvField(file, application->notes) && fputc('\n', file) != EOF;
 }
 
-FileResult loadApplications(const char *filePath, ApplicationList *applications){
+FileResult loadApplications(const char* filePath, ApplicationList* applications) {
     ApplicationList loadedApplications;
-    FILE *file;
+    FILE* file;
     char line[CSV_LINE_SIZE];
     size_t lineNumber = 0;
 
-    if (filePath == NULL || applications == NULL){
+    if (filePath == NULL || applications == NULL) {
         return FileResultInvalidData;
     }
 
     file = fopen(filePath, "r");
-    if (file == NULL){
-        if (errno == ENOENT){
+    if (file == NULL) {
+        if (errno == ENOENT) {
             return FileResultNotFound;
         }
 
@@ -212,53 +202,53 @@ FileResult loadApplications(const char *filePath, ApplicationList *applications)
 
     initApplicationList(&loadedApplications);
 
-    while (fgets(line, sizeof(line), file) != NULL){
+    while (fgets(line, sizeof(line), file) != NULL) {
         char fields[CSV_FIELD_COUNT][CSV_FIELD_SIZE];
         size_t fieldCount = 0;
         Application application;
 
         lineNumber++;
 
-        if (strchr(line, '\n') == NULL && !feof(file)){
+        if (strchr(line, '\n') == NULL && !feof(file)) {
             freeApplicationList(&loadedApplications);
             fclose(file);
             return FileResultInvalidData;
         }
 
-        if (line[0] == '\n' || line[0] == '\r' || line[0] == '\0'){
+        if (line[0] == '\n' || line[0] == '\r' || line[0] == '\0') {
             continue;
         }
 
-        if (!parseCsvLine(line, fields, &fieldCount) || fieldCount != CSV_FIELD_COUNT){
+        if (!parseCsvLine(line, fields, &fieldCount) || fieldCount != CSV_FIELD_COUNT) {
             freeApplicationList(&loadedApplications);
             fclose(file);
             return FileResultInvalidData;
         }
 
-        if (lineNumber == 1 && fieldsAreHeader(fields)){
+        if (lineNumber == 1 && fieldsAreHeader(fields)) {
             continue;
         }
 
-        if (!applicationFromFields(fields, &application)){
+        if (!applicationFromFields(fields, &application)) {
             freeApplicationList(&loadedApplications);
             fclose(file);
             return FileResultInvalidData;
         }
 
-        if (!addApplicationToList(&loadedApplications, &application)){
+        if (!addApplicationToList(&loadedApplications, &application)) {
             freeApplicationList(&loadedApplications);
             fclose(file);
             return FileResultMemoryError;
         }
     }
 
-    if (ferror(file)){
+    if (ferror(file)) {
         freeApplicationList(&loadedApplications);
         fclose(file);
         return FileResultIoError;
     }
 
-    if (fclose(file) != 0){
+    if (fclose(file) != 0) {
         freeApplicationList(&loadedApplications);
         return FileResultIoError;
     }
@@ -269,40 +259,41 @@ FileResult loadApplications(const char *filePath, ApplicationList *applications)
     return FileResultOk;
 }
 
-FileResult saveApplications(const char *filePath, const ApplicationList *applications){
-    FILE *file;
+FileResult saveApplications(const char* filePath, const ApplicationList* applications) {
+    FILE* file;
     size_t i;
 
-    if (filePath == NULL || applications == NULL){
+    if (filePath == NULL || applications == NULL) {
         return FileResultInvalidData;
     }
 
     file = fopen(filePath, "w");
-    if (file == NULL){
+    if (file == NULL) {
         return FileResultIoError;
     }
 
-    if (fputs("Company,Position,Location,Source,Date Applied,Status,Follow-up Date,Notes\n", file) < 0){
+    if (fputs("Company,Position,Location,Source,Date Applied,Status,Follow-up Date,Notes\n", file) <
+        0) {
         fclose(file);
         return FileResultIoError;
     }
 
-    for (i = 0; i < applications->count; i++){
-        if (!writeApplication(file, &applications->items[i])){
+    for (i = 0; i < applications->count; i++) {
+        if (!writeApplication(file, &applications->items[i])) {
             fclose(file);
             return FileResultIoError;
         }
     }
 
-    if (fclose(file) != 0){
+    if (fclose(file) != 0) {
         return FileResultIoError;
     }
 
     return FileResultOk;
 }
 
-const char *fileResultToString(FileResult result){
-    switch (result){
+const char* fileResultToString(FileResult result) {
+    switch (result) {
     case FileResultOk:
         return "ok";
 
