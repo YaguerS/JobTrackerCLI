@@ -2,23 +2,24 @@
 
 JobTrackerCLI is a C17 command-line application for tracking job applications during an IT job search.
 
-## Status
+## Features
 
-Milestones 1, 2, 3, 4, 5, 6, and 7 are implemented:
-
-- Project structure
-- Public headers
-- Makefile
-- Menu-only executable
-- Application structure
-- Status enum
-- Basic menu navigation with an in-memory application list
-- CSV loading on startup
-- CSV saving from the menu and on exit
-- Add application workflow with input validation
-- View applications
+- Add job applications
+- View all applications
+- Update application status
 - Search by company
-- Statistics
+- Display job-search statistics
+- Load and save data as CSV
+
+## Data
+
+Application data is stored in:
+
+```bash
+data/applications.csv
+```
+
+The file is created automatically when the program saves.
 
 ## Build
 
@@ -37,3 +38,11 @@ make run
 ```bash
 make clean
 ```
+
+## Development Notes
+
+- Language: C17
+- Compiler: GCC
+- Dependencies: standard C library only
+- Main warning target: `-Wall -Wextra -Wpedantic`
+- Runtime data is ignored by Git so personal job-search records are not committed accidentally.

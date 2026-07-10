@@ -1,5 +1,6 @@
 #include "application.h"
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -52,6 +53,10 @@ int addApplicationToList(ApplicationList *applications, const Application *appli
             }
 
             newCapacity = applications->capacity * 2;
+        }
+
+        if (newCapacity > SIZE_MAX / sizeof(applications->items[0])){
+            return 0;
         }
 
         items = realloc(applications->items, newCapacity * sizeof(applications->items[0]));

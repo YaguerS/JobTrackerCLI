@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -181,15 +182,44 @@ static void handleViewApplications(const ApplicationList *applications){
     }
 }
 
-static void handleUpdateStatus(const ApplicationList *applications){
+static void handleUpdateStatus(ApplicationList *applications){
+    int applicationChoice;
+    int statusChoice;
+    Application *application;
+
     if (getApplicationCount(applications) == 0){
         puts("No applications available to update.");
         return;
     }
 
-    puts("Available statuses:");
+    if (applications->count > INT_MAX){
+        puts("Too many applications to update safely from this menu.");
+        return;
+    }
+
+    handleViewApplications(applications);
+
+    if (!readIntInRange("Choose application number: ", 1, (int)applications->count,
+                        &applicationChoice)){
+        puts("Update cancelled.");
+        return;
+    }
+
+    application = &applications->items[(size_t)applicationChoice - 1];
+    printf("Current status for %s: %s\n", application->company,
+           statusToString(application->status));
+
+    puts("\nAvailable statuses:");
     printStatusOptions();
-    puts("Update application status is not implemented yet.");
+
+    if (!readIntInRange("Choose new status (1-8): ", StatusLead, StatusAccepted,
+                        &statusChoice)){
+        puts("Update cancelled.");
+        return;
+    }
+
+    application->status = (ApplicationStatus)statusChoice;
+    printf("Updated %s to %s.\n", application->company, statusToString(application->status));
 }
 
 static void handleSearchByCompany(const ApplicationList *applications){
